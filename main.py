@@ -1,6 +1,6 @@
 import numpy as np
-from numpy import eye, diag
 from numpy.linalg import inv
+import ipdb
 
 
 class FactorAnalysis:
@@ -10,7 +10,7 @@ class FactorAnalysis:
         self.sigma = sigma
 
     def fit(self, X):
-        X, Z, Z_by_Z, X_by_X, X_by_Z = self._perform_expectation(X)
+        X, Z, X_by_X, Z_by_Z, X_by_Z = self._perform_expectation(X)
         print("problem 1 answer: updated mu = {}, X = {}".format(Z, X))
         print("problem 2 answer: Σ^(Z|X) = {}, <z>_n = {}, <zz>_n = {}"
               .format(self._calc_sigma_of_Z(), self._calc_squared_Z(Z), Z_by_Z))
@@ -27,22 +27,22 @@ class FactorAnalysis:
         mean_vec = np.mean(X, axis=0)
         X = X - mean_vec
         Z = self._calc_sigma_of_Z() @ self.W.T @ inv(self.sigma) @ X.T
-        X_by_X = self.diag(X.T @ X)
+        X_by_X = self._diag(X.T @ X)
         Z_by_Z = Z @ Z.T + self._calc_sigma_of_Z()
         X_by_Z = X.T @ Z.T
         return X, Z, X_by_X, Z_by_Z, X_by_Z
 
     def _perform_maximization(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
-        updated_W = (X_by_Z.T @ inv(Z_by_Z)).T
-        updated_cov_mat = self.diag((X_by_X - X_by_Z @ updated_W.T)) / n_samples
+        updated_W = (X_by_Z @ inv(Z_by_Z))
+        updated_cov_mat = self._diag((X_by_X - X_by_Z @ updated_W.T)) / n_samples
         return updated_W, updated_cov_mat
 
-    def diag(self, A):
-        return diag(diag(A))
+    def _diag(self, A):
+        return np.diag(np.diag(A))
 
     def _calc_sigma_of_Z(self):
         i_size = self.W.shape[1]
-        return inv(self.W.T @ inv(self.sigma) @ self.W + eye(i_size))
+        return inv(self.W.T @ inv(self.sigma) @ self.W + np.eye(i_size))
 
     def _calc_squared_Z(self, Z):
         return np.multiply(Z, Z) + self._calc_sigma_of_Z()
