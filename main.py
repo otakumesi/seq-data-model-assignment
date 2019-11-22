@@ -51,8 +51,8 @@ n_3, n_2, n_1, n_0 = [int(sid) for sid in STUDENT_ID[-4:]]
 print("n_0 = {}, n_1 = {}, n_2 = {}, n_3 = {}".format(n_0, n_1, n_2, n_3))
 
 x_1 = np.array([n_0,       n_2 + n_3], dtype=np.float)
-x_2 = np.array([n_1 + n_3, n_2 + n_3], dtype=np.float)
-x_3 = np.array([n_0 + n_3, n_3],       dtype=np.float)
+x_2 = np.array([n_1 + n_3, n_3], dtype=np.float)
+x_3 = np.array([n_0 + n_3, n_1],       dtype=np.float)
 x_4 = np.array([n_2,       n_0 + n_1], dtype=np.float)
 x_5 = np.array([n_0 + n_2, n_1 + n_2], dtype=np.float)
 print("x_1 = {}, x_2 = {}, x_3 = {}, x_4 = {}, x_5 = {}")
