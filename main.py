@@ -39,14 +39,13 @@ class FactorAnalysis:
         X_by_Z = X.T @ Z.T
         return X, Z, X_by_X, Z_by_Z, X_by_Z
 
-    def _perform_maximizatinon(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
+    def _perform_maximization(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
         updated_W = (X_by_Z.T @ inv(Z_by_Z)).T
-        updated_cov_mat = np.multiply((X_by_X - X_by_Z @ updated_W.T), np.eye(2)) / n_samples
+        updated_cov_mat = (X_by_X - X_by_Z @ updated_W.T) * np.eye(2) / n_samples
         return updated_W, updated_cov_mat
 
     def _calc_sigma_of_Z(self):
-        imat = np.eye(1)
-        return inv(self.W.T @ inv(self.sigma) @ self.W + imat)
+        return inv(self.W.T @ inv(self.sigma) @ self.W + np.eye(1))
 
     def _calc_squared_latent_mu(self, Z):
         return np.multiply(Z, Z) + self._calc_sigma_of_Z()
