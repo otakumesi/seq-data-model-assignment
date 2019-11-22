@@ -18,7 +18,7 @@ class FactorAnalysis:
         print("problem 3 answer: N = {}, <x'x'^T> = {} <zz^T> ={}, <x'<z>^T> = {}"
               .format(n_samples, X_by_X, Z_by_Z, X_by_Z))
 
-        updated_W, update_cov_mat = self._perform_maximization(n_samples, Z_by_Z, X_by_X, X_by_Z)
+        updated_W, update_cov_mat = self._perform_maximization(n_samples, X_by_X, Z_by_Z, X_by_Z)
         print("problem 4 answer: W = {}, Σ = {}".format(updated_W, update_cov_mat))
         print("problem 5 answer: after = {}, before = {}".format(self.sigma, update_cov_mat))
 
@@ -31,9 +31,9 @@ class FactorAnalysis:
         X_by_Z = X.T @ Z.T
         return X, Z, X_by_X, Z_by_Z, X_by_Z
 
-    def _perform_maximization(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
-        updated_W = (X_by_Z @ inv(Z_by_Z))
-        updated_cov_mat = self._diag((X_by_X - X_by_Z @ updated_W.T)) / n_samples
+    def _perform_maximization(self, n_samples, X_by_X, Z_by_Z, X_by_Z):
+        updated_W = X_by_Z @ inv(Z_by_Z)
+        updated_cov_mat = self._diag((X_by_X - (X_by_Z @ updated_W.T))) / n_samples
         return updated_W, updated_cov_mat
 
     def _diag(self, A):
