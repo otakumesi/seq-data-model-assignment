@@ -33,7 +33,7 @@ class FactorAnalysis:
     def _perform_expectation(self, X):
         mean_vec = np.mean(X)
         X = X - mean_vec
-        Z = self._calc_sigma_of_Z() @ self.W.T @ self._get_inv_sigma() @ X.T
+        Z = self._calc_sigma_of_Z() @ self.W.T @ inv(self.sigma) @ X.T
         X_by_X = X.T @ X * np.eye(2)
         Z_by_Z = Z @ Z.T + self._calc_sigma_of_Z()
         X_by_Z = X.T @ Z.T
@@ -44,12 +44,9 @@ class FactorAnalysis:
         updated_cov_mat = np.multiply((X_by_X - X_by_Z @ updated_W.T), np.eye(2)) / n_samples
         return updated_W, updated_cov_mat
 
-    def _get_inv_sigma(self):
-        return inv(self.sigma)
-
     def _calc_sigma_of_Z(self):
         imat = np.eye(1)
-        return inv(self.W.T @ self._get_inv_sigma() @ self.W + imat)
+        return inv(self.W.T @ inv(self.sigma) @ self.W + imat)
 
     def _calc_squared_latent_mu(self, Z):
         return np.multiply(Z, Z) + self._calc_sigma_of_Z()
