@@ -1,5 +1,5 @@
 import numpy as np
-from numpy import eye
+from numpy import eye, diag
 from numpy.linalg import inv
 
 
@@ -13,7 +13,7 @@ class FactorAnalysis:
         X, Z, Z_by_Z, X_by_X, X_by_Z = self._perform_expectation(X)
         print("problem 1 answer: updated mu = {}, X = {}".format(Z, X))
         print("problem 2 answer: Σ^(Z|X) = {}, <z>_n = {}, <zz>_n = {}"
-              .format(self._calc_sigma_of_Z(), self._calc_squared_latent_mu(Z), Z_by_Z))
+              .format(self._calc_sigma_of_Z(), self._calc_squared_Z(Z), Z_by_Z))
 
         n_samples = X.shape[0]
         print("problem 3 answer: N = {}, <x'x'^T> = {} <zz^T> ={}, <x'<z>^T> = {}"
@@ -27,20 +27,24 @@ class FactorAnalysis:
         mean_vec = np.mean(X, axis=0)
         X = X - mean_vec
         Z = self._calc_sigma_of_Z() @ self.W.T @ inv(self.sigma) @ X.T
-        X_by_X = X.T @ X * eye(2)
+        X_by_X = self.diag(X.T @ X)
         Z_by_Z = Z @ Z.T + self._calc_sigma_of_Z()
         X_by_Z = X.T @ Z.T
         return X, Z, X_by_X, Z_by_Z, X_by_Z
 
     def _perform_maximization(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
         updated_W = (X_by_Z.T @ inv(Z_by_Z)).T
-        updated_cov_mat = (X_by_X - X_by_Z @ updated_W.T) * eye(2) / n_samples
+        updated_cov_mat = self.diag((X_by_X - X_by_Z @ updated_W.T)) / n_samples
         return updated_W, updated_cov_mat
 
-    def _calc_sigma_of_Z(self):
-        return inv(self.W.T @ inv(self.sigma) @ self.W + eye(1))
+    def diag(self, A):
+        return diag(diag(A))
 
-    def _calc_squared_latent_mu(self, Z):
+    def _calc_sigma_of_Z(self):
+        i_size = self.W.shape[1]
+        return inv(self.W.T @ inv(self.sigma) @ self.W + eye(i_size))
+
+    def _calc_squared_Z(self, Z):
         return np.multiply(Z, Z) + self._calc_sigma_of_Z()
 
 
