@@ -21,7 +21,7 @@ class FactorAnalysis:
               "<zz^T> ={}, <x'<z>^T> = {}"
               .format(n_samples, X_by_X, Z_by_Z, X_by_Z))
 
-        updated_W, update_cov_mat = self._perform_maximize(n_samples,
+        updated_W, update_cov_mat = self._perform_maximization(n_samples,
                                                            Z_by_Z,
                                                            X_by_X,
                                                            X_by_Z)
@@ -39,7 +39,7 @@ class FactorAnalysis:
         X_by_Z = X.T @ Z.T
         return X, Z, X_by_X, Z_by_Z, X_by_Z
 
-    def _perform_maximize(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
+    def _perform_maximizatinon(self, n_samples, Z_by_Z, X_by_X, X_by_Z):
         updated_W = (X_by_Z.T @ inv(Z_by_Z)).T
         updated_cov_mat = np.multiply((X_by_X - X_by_Z @ updated_W.T), np.eye(2)) / n_samples
         return updated_W, updated_cov_mat
