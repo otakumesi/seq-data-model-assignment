@@ -1,6 +1,5 @@
 import numpy as np
 from numpy.linalg import inv
-import ipdb
 
 
 class FactorAnalysis:
@@ -13,7 +12,7 @@ class FactorAnalysis:
         X, Z, X_by_X, Z_by_Z, X_by_Z = self._perform_expectation(X)
         print("problem 1 answer: updated mu = {}, X = {}".format(Z, X))
         print("problem 2 answer: Σ^(Z|X) = {}, <z>_n = {}, <zz>_n = {}"
-              .format(self._calc_sigma_of_Z(), self._calc_squared_Z(Z), Z_by_Z))
+              .format(self._calc_sigma_of_Z(), Z, self._calc_squared_Z(Z)))
 
         n_samples = X.shape[0]
         print("problem 3 answer: N = {}, <x'x'^T> = {} <zz^T> ={}, <x'<z>^T> = {}"
