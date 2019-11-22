@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import eye
 from numpy.linalg import inv
-import ipdb
 
 
 class FactorAnalysis:
