@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import eye
 from numpy.linalg import inv
+import ipdb
 
 
 class FactorAnalysis:
@@ -24,7 +25,7 @@ class FactorAnalysis:
         print("problem 5 answer: after = {}, before = {}".format(self.sigma, update_cov_mat))
 
     def _perform_expectation(self, X):
-        mean_vec = np.mean(X)
+        mean_vec = np.mean(X, axis=0)
         X = X - mean_vec
         Z = self._calc_sigma_of_Z() @ self.W.T @ inv(self.sigma) @ X.T
         X_by_X = X.T @ X * eye(2)
