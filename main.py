@@ -18,9 +18,12 @@ class FactorAnalysis:
         print("problem 3 answer: N = {}, <x'x'^T> = {} <zz^T> ={}, <x'<z>^T> = {}"
               .format(n_samples, X_by_X, Z_by_Z, X_by_Z))
 
-        updated_W, update_cov_mat = self._perform_maximization(n_samples, X_by_X, Z_by_Z, X_by_Z)
-        print("problem 4 answer: W = {}, Σ = {}".format(updated_W, update_cov_mat))
-        print("problem 5 answer: after = {}, before = {}".format(self.sigma, update_cov_mat))
+        updated_W, updated_cov_mat = self._perform_maximization(n_samples, X_by_X, Z_by_Z, X_by_Z)
+        print("problem 4 answer: W = {}, Σ = {}".format(updated_W, updated_cov_mat))
+
+        before_lambda_cov = self.W @ self.W.T + self.sigma
+        after_lambda_cov = updated_W @ updated_W.T + updated_cov_mat
+        print("problem 5 answer: before = {}, after = {}".format(before_lambda_cov, after_lambda_cov))
 
     def _perform_expectation(self, X):
         mean_vec = np.mean(X, axis=0)
