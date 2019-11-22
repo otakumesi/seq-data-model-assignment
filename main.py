@@ -27,7 +27,7 @@ class FactorAnalysis:
         X = X - mean_vec
         Z = self._calc_sigma_of_Z() @ self.W.T @ inv(self.sigma) @ X.T
         X_by_X = self._diag(X.T @ X)
-        Z_by_Z = Z @ Z.T + self._calc_sigma_of_Z()
+        Z_by_Z = Z @ Z.T + (self._calc_sigma_of_Z() * Z.shape[1])
         X_by_Z = X.T @ Z.T
         return X, Z, X_by_X, Z_by_Z, X_by_Z
 
