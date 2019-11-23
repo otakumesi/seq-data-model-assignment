@@ -9,8 +9,11 @@ class FactorAnalysis:
         self.sigma = sigma
 
     def fit(self, X):
-        X, Z, X_by_X, Z_by_Z, X_by_Z = self._perform_expectation(X)
-        print("problem 1 answer: updated mu = {}, X = {}".format(Z, X))
+        mu, X, Z, X_by_X, Z_by_Z, X_by_Z = self._perform_expectation(X)
+
+        self.mu = mu
+
+        print("problem 1 answer: updated mu = {}, X = {}".format(self.mu, X))
         print("problem 2 answer: Σ^(Z|X) = {}, <z>_n = {}, <zz>_n = {}"
               .format(self._calc_sigma_of_Z(), Z, self._calc_squared_Z(Z)))
 
@@ -18,21 +21,24 @@ class FactorAnalysis:
         print("problem 3 answer: N = {}, <x'x'^T> = {} <zz^T> ={}, <x'<z>^T> = {}"
               .format(n_samples, X_by_X, Z_by_Z, X_by_Z))
 
-        updated_W, updated_cov_mat = self._perform_maximization(n_samples, X_by_X, Z_by_Z, X_by_Z)
-        print("problem 4 answer: W = {}, Σ = {}".format(updated_W, updated_cov_mat))
+        updated_W, updated_sigma = self._perform_maximization(n_samples, X_by_X, Z_by_Z, X_by_Z)
+        print("problem 4 answer: W = {}, Σ = {}".format(updated_W, updated_sigma))
 
         before_lambda_cov = self.W @ self.W.T + self.sigma
-        after_lambda_cov = updated_W @ updated_W.T + updated_cov_mat
+        after_lambda_cov = updated_W @ updated_W.T + updated_sigma
         print("problem 5 answer: before = {}, after = {}".format(before_lambda_cov, after_lambda_cov))
 
+        self.W = updated_W
+        self.sigma = updated_sigma
+
     def _perform_expectation(self, X):
-        mean_vec = np.mean(X, axis=0)
-        X = X - mean_vec
+        mu = np.mean(X, axis=0)
+        X = X - mu
         Z = self._calc_sigma_of_Z() @ self.W.T @ inv(self.sigma) @ X.T
         X_by_X = self._diag(X.T @ X)
         Z_by_Z = Z @ Z.T + (self._calc_sigma_of_Z() * Z.shape[1])
         X_by_Z = X.T @ Z.T
-        return X, Z, X_by_X, Z_by_Z, X_by_Z
+        return mu, X, Z, X_by_X, Z_by_Z, X_by_Z
 
     def _perform_maximization(self, n_samples, X_by_X, Z_by_Z, X_by_Z):
         updated_W = X_by_Z @ inv(Z_by_Z)
