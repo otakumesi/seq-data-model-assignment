@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.linalg import inv
+import ipdb
 
 
 class FactorAnalysis:
@@ -13,7 +14,7 @@ class FactorAnalysis:
 
         self.mu = mu
 
-        print("problem 1 answer: updated mu = {}, X = {}".format(self.mu, X))
+        print("problem 1 answer: updated μ = {}, X = {}".format(self.mu, X))
         print("problem 2 answer: Σ^(Z|X) = {}, <z>_n = {}, <zz>_n = {}"
               .format(self._calc_sigma_of_Z(), Z, self._calc_squared_Z(Z)))
 
@@ -67,7 +68,8 @@ x_2 = np.array([n_1 + n_3, n_3],       dtype=np.float)
 x_3 = np.array([n_0 + n_3, n_1],       dtype=np.float)
 x_4 = np.array([n_2,       n_0 + n_1], dtype=np.float)
 x_5 = np.array([n_0 + n_2, n_1 + n_2], dtype=np.float)
-print("x_1 = {}, x_2 = {}, x_3 = {}, x_4 = {}, x_5 = {}")
+print("x_1 = {}, x_2 = {}, x_3 = {}, x_4 = {}, x_5 = {}"
+      .format(x_1, x_2, x_3, x_4, x_5))
 
 INPUT_X = np.vstack((x_1, x_2, x_3, x_4, x_5))
 INIT_W = np.array([1, 0], dtype=np.float)
